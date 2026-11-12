@@ -1,257 +1,47 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>临安夜市寻味记 - 主街景</title>
-<style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
-        background-color: #f8f5e9;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        min-height: 100vh;
-        overflow: hidden;
-    }
-    .scroll-wrap {
-        position: relative;
-        width: 90vw;
-        max-width: 1200px;
-        height: 600px;
-        overflow: hidden;
-    }
-    .scene-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        z-index: 10;
-    }
-    /* 包裹层：图片+按钮一起平移 */
-    .scene-inner {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        will-change: transform;
-    }
-    .scene-img {
-        display: block;
-        height: auto;
-        width: auto;
-        pointer-events: none;
-    }
-    /* 钉在图上的按钮，相对于 inner 包裹层定位 */
-    .btn-game {
-        position: absolute;
-        top: 68%;
-        right: 47%;
-        width: 140px;
-        height: 46px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 15;
-        background: rgba(139, 80, 40, 0.85);
-        color: #fff8e8;
-        transition: background 0.2s, transform 0.1s;
-    }
-    /* 小吃店按钮，和夜市寻物样式完全一致 */
-    .btn-food {
-        position: absolute;
-        top: 30%;
-        right: 18%;
-        width: 140px;
-        height: 46px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 15;
-        background: rgba(139, 80, 40, 0.85);
-        color: #fff8e8;
-        transition: background 0.2s, transform 0.1s;
-    }
-    .btn-game:hover, .btn-food:hover {
-        background: rgba(139, 80, 40, 0.96);
-    }
-    .btn-game:active, .btn-food:active {
-        transform: scale(0.95);
-    }
-
-    .scroll-frame {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 30;
-        pointer-events: none;
-        background-image: url("./img/scroll-frame.png");
-        background-size: 100% 100%;
-        background-repeat: no-repeat;
-    }
-    .control-btn {
-        position: absolute;
-        border: none;
-        background: rgba(255,255,255,0.7);
-        font-size: 24px;
-        color: #444;
-        border-radius: 8px;
-        cursor: pointer;
-        z-index: 40;
-        transition: background 0.2s, transform 0.1s;
-    }
-    .control-btn:hover {
-        background: rgba(255,255,255,0.95);
-    }
-    .control-btn:active {
-        transform: scale(0.95);
-        background: rgba(255,255,255,1);
-    }
-    .control-btn:disabled {
-        background: rgba(200,200,200,0.4);
-        cursor: not-allowed;
-        color: #999;
-    }
-    .btn-left, .btn-right {
-        top: 50%;
-        transform: translateY(-50%);
-        width: 48px;
-        height: 90px;
-    }
-    .btn-left { left: 10px; }
-    .btn-right { right: 10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临安夜市寻味记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f8f4e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .cover {
+            position: relative;
+            width: 1200px;  /* 和你主页面统一核心宽度1200px */
+            aspect-ratio: 1440 / 900;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: url("images/home_bg.jpg") center / contain no-repeat;
+            background-color: #f8f4e8;
+        }
+        .start-hotzone {
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 80px;
+            background: transparent;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-<div class="scroll-wrap">
-    <div class="scene-container">
-        <div class="scene-inner" id="innerWrap">
-            <img class="scene-img" id="sceneImg" src="./img/scene-long.png" alt="临安夜市长街景" />
-            <button class="btn-game" id="gameBtn">夜市寻物</button>
-            <button class="btn-food" id="foodBtn">进入小吃店</button>
-        </div>
+    <div class="cover">
+        <div class="start-hotzone" onclick="location.href='zhujiejing.html'"></div>
     </div>
-
-    <div class="scroll-frame"></div>
-
-    <button class="control-btn btn-left" id="prevBtn">◀</button>
-    <button class="control-btn btn-right" id="nextBtn">▶</button>
-</div>
-
-<script>
-    const sceneImg = document.getElementById("sceneImg");
-    const innerWrap = document.getElementById("innerWrap");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
-    const gameBtn = document.getElementById("gameBtn");
-    const foodBtn = document.getElementById("foodBtn");
-
-    let offsetX = 0;
-    let maxMoveX = 0;
-    const clickStep = 80;
-    const holdSpeed = 12;
-    const accelerateAfter = 400;
-    const moveInterval = 16;
-    let moveTimer = null;
-    let dirX = 0;
-
-    sceneImg.onerror = function () {
-        alert("场景图加载失败，请检查 img/scene-long.png");
-    };
-
-    gameBtn.onclick = function () {
-        location.href = "game.html";
-    };
-    foodBtn.onclick = function () {
-        location.href = "xiaochi.html";
-    };
-
-    function updateImgPos() {
-        const imgW = sceneImg.offsetWidth;
-        const viewW = sceneImg.parentElement.parentElement.clientWidth;
-
-        maxMoveX = imgW > viewW ? (imgW - viewW) / 2 : 0;
-        offsetX = Math.max(-maxMoveX, Math.min(maxMoveX, offsetX));
-
-        innerWrap.style.transform = `translate(calc(-50% + ${offsetX}px), -50%)`;
-
-        prevBtn.disabled = offsetX >= maxMoveX;
-        nextBtn.disabled = offsetX <= -maxMoveX;
-    }
-
-    function startMove(dx) {
-        dirX = dx;
-        offsetX += dx * clickStep;
-        updateImgPos();
-
-        setTimeout(() => {
-            if (dirX !== 0) {
-                startContinuousMove();
-            }
-        }, accelerateAfter);
-    }
-
-    function startContinuousMove() {
-        stopContinuousMove();
-        moveTimer = setInterval(() => {
-            if (dirX === 0) {
-                stopContinuousMove();
-                return;
-            }
-            offsetX += dirX * holdSpeed;
-            updateImgPos();
-        }, moveInterval);
-    }
-
-    function stopContinuousMove() {
-        if (moveTimer) {
-            clearInterval(moveTimer);
-            moveTimer = null;
-        }
-    }
-
-    function endMove() {
-        dirX = 0;
-        stopContinuousMove();
-    }
-
-    prevBtn.addEventListener("mousedown", () => startMove(1));
-    nextBtn.addEventListener("mousedown", () => startMove(-1));
-
-    window.addEventListener("mouseup", endMove);
-    window.addEventListener("mouseleave", endMove);
-
-    prevBtn.addEventListener("touchstart", e => {
-        e.preventDefault();
-        startMove(1);
-    }, { passive: false });
-
-    nextBtn.addEventListener("touchstart", e => {
-        e.preventDefault();
-        startMove(-1);
-    }, { passive: false });
-
-    window.addEventListener("touchend", endMove);
-    window.addEventListener("touchcancel", endMove);
-
-    document.addEventListener("keydown", (e) => {
-        if (e.key === "ArrowLeft") startMove(1);
-        else if (e.key === "ArrowRight") startMove(-1);
-    });
-    document.addEventListener("keyup", endMove);
-
-    sceneImg.onload = updateImgPos;
-    if(sceneImg.complete) updateImgPos();
-    window.addEventListener("resize", updateImgPos);
-</script>
 </body>
 </html>
