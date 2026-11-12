@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临安夜市寻味记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #f8f4e8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        .cover {
+            position: relative;
+            width: 1200px;  /* 和你主页面统一核心宽度1200px */
+            aspect-ratio: 1440 / 900;
+            max-width: 90vw;
+            max-height: 90vh;
+            background: url("images/home_bg.jpg") center / contain no-repeat;
+            background-color: #f8f4e8;
+        }
+        .start-hotzone {
+            position: absolute;
+            bottom: 18%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 240px;
+            height: 80px;
+            background: transparent;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="cover">
+        <div class="start-hotzone" onclick="location.href='index.html'"></div>
+    </div>
+</body>
+</html>

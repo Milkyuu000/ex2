@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <!-- 新增：自适应必须的视口设置，对应规范「自适应各种设备尺寸」要求 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>南宋小吃铺经营页</title>
+	<style>
+		/* 修正原代码语法错误：去掉通配符前多余的点 */
+		* {
+		    margin: 0;
+		    padding: 0;
+		    box-sizing: border-box;
+		}
+		
+		body {
+		    background-color: #f7e9c8;
+		    font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+		    /* 新增：对应规范「每次显示一屏，不出现滚动条」要求 */
+		    height: 100vh;
+		    overflow: hidden;
+		}
+		
+		.page {
+		    width: 100%;
+		    /* 修改：固定全屏高度，内容垂直居中，实现一屏完整显示 */
+		    height: 100vh;
+		    display: flex;
+		    justify-content: center;
+		    align-items: center;
+		    /* 去掉原有的上下padding，避免内容溢出 */
+		    padding: 0;
+		}
+		
+		/* 主容器：保留原有1200px基准，新增高度限制，适配不同屏幕 */
+		.wrapper {
+		    position: relative;
+		    width: 1200px;
+		    max-width: 96vw;
+		    /* 新增：高度不超过视口90%，确保上下完整显示 */
+		    max-height: 90vh;
+		    aspect-ratio: 1200 / 768;
+		    margin: 0 auto;
+		    overflow: hidden;
+		    border: 0.8vw solid #3b322b;
+		    border-radius: 1vw;
+		    background-color: #f8f5e9;
+		}
+		
+		/* 背景图：完全保留原有样式 */
+		.bg {
+		    position: absolute;
+		    top: 0;
+		    left: 0;
+		    width: 100%;
+		    height: 100%;
+		    object-fit: cover;
+		    z-index: 1;
+		}
+		
+		/* ========== 右上角信息组：完全保留原有样式 ========== */
+		.info-group {
+		    position: absolute;
+		    top: 5%;
+		    right: 4%;
+		    z-index: 3;
+		    display: flex;
+		    flex-direction: column;
+		    align-items: flex-end;
+		    gap: 0.8vw;
+		}
+		
+		.info-item {
+		    background-color: rgba(255, 249, 232, 0.5);
+		    border: 0.2vw solid rgba(201, 180, 124, 0.5);
+		    border-radius: 1vw;
+		    padding: 0.5vw 1.8vw;
+		    font-size: 1.2vw;
+		    color: #583c20;
+		}
+		
+		.info-tip {
+		    background-color: rgba(255, 249, 232, 0.45);
+		    border: 0.2vw solid rgba(201, 180, 124, 0.45);
+		    border-radius: 0.8vw;
+		    padding: 0.4vw 1.2vw;
+		    font-size: 1vw;
+		    color: #583c20;
+		}
+		
+		/* ========== 左侧点菜区：完全保留原有样式 ========== */
+		.order-area {
+		    position: absolute;
+		    top: 18%;
+		    left: 5%;
+		    z-index: 3;
+		    width: 11%;
+		}
+		
+		.order-title {
+		    width: 100%;
+		    box-sizing: border-box;
+		    font-size: 1.1vw;
+		    color: #7c542c;
+		    background-color: rgba(255, 249, 232, 0.5);
+		    border: 0.2vw solid rgba(201, 180, 124, 0.5);
+		    border-radius: 1vw;
+		    padding: 0.6vw 1vw;
+		    text-align: center;
+		    margin-bottom: 0.8vw;
+		}
+		
+		.order-card-box {
+		    width: 100%;
+		    box-sizing: border-box;
+		    aspect-ratio: 1 / 1.15;
+		    background-color: rgba(255, 249, 232, 0.45);
+		    border: 0.2vw dashed rgba(201, 180, 124, 0.55);
+		    border-radius: 1.2vw;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		    color: #7c542c;
+		    font-size: 1vw;
+		}
+		
+		/* ========== 右侧食物区：完全保留原有样式 ========== */
+		.food-card {
+		    position: absolute;
+		    top: 30%;
+		    right: 3%;
+		    width: 20%;
+		    z-index: 3;
+		    background-color: rgba(255, 249, 232, 0.45);
+		    border: 0.2vw solid rgba(201,180,124,0.45);
+		    border-radius: 1.2vw;
+		    padding: 1.2vw 1vw;
+		}
+		
+		.food-grid {
+		    display: grid;
+		    grid-template-columns: repeat(2, 1fr);
+		    gap: 1.2vw 1vw;
+		}
+		
+		.food-item {
+		    display: flex;
+		    flex-direction: column;
+		    align-items: center;
+		    gap: 0.5vw;
+		}
+		
+		.food-circle {
+		    width: 70%;
+		    aspect-ratio: 1 / 1;
+		    border-radius: 50%;
+		    border: 0.2vw solid #82b89e;
+		    background-color: #ffffff;
+		    background-size: cover;
+		    background-position: center;
+		    background-repeat: no-repeat;
+		}
+		
+		.food-yuanzi {
+		    background-image: url("images/yuanzi.jpg");
+		}
+		.food-dingsheng {
+		    background-image: url("images/dingshenggao.jpg");
+		}
+		.food-suyou {
+		    background-image: url("images/suyoubing.jpg");
+		}
+		.food-congbao {
+		    background-image: url("images/congbaohui.jpg");
+		}
+		.food-huntun {
+		    background-image: url("images/huntun.jpg");
+		}
+		.food-shuijing {
+		    background-image: url("images/shuijingkuai.jpg");
+		}
+		
+		.food-name {
+		    font-size: 0.9vw;
+		    color: #583c20;
+		}
+		
+		/* ========== 底部进度条：完全保留原有样式 ========== */
+		.progress-wrap {
+		    position: absolute;
+		    bottom: 6%;
+		    left: 50%;
+		    transform: translateX(-50%);
+		    width: 60%;
+		    z-index: 3;
+		}
+		
+		.progress-text {
+		    text-align: center;
+		    color: #583c20;
+		    font-size: 1vw;
+		    margin-bottom: 0.5vw;
+		}
+		
+		.progress-bar {
+		    width: 100%;
+		    height: 1.2vw;
+		    background-color: #eee8d5;
+		    border: 0.2vw solid #c9b47c;
+		    border-radius: 1vw;
+		    overflow: hidden;
+		}
+		
+		.progress-fill {
+		    height: 100%;
+		    width: 30%;
+		    background: linear-gradient(90deg, #72b89e, #f1c444);
+		}
+		
+		/* ========== 右下角按钮：完全保留原有样式 ========== */
+		.link-btn {
+		    position: absolute;
+		    bottom: 2%;
+		    right: 4%;
+		    font-size: 1vw;
+		    color: #583c20;
+		    background-color: #fff9e8;
+		    border: 0.2vw solid #c9b47c;
+		    border-radius: 0.6vw;
+		    padding: 0.4vw 1vw;
+		    text-decoration: none;
+		    z-index: 3;
+		}
+		
+	</style>
+    <link rel="stylesheet" href="new_file.css">
+</head>
+<body>
+
+<div class="page">
+    <div class="wrapper">
+		<a href="../new_file.html" class="back-btn">返回主街区</a>
+		<a href="../../shouye/new_file.html" class="back-btn" style="left:140px;">返回首页</a>
+
+
+
+        <!-- 背景插画 -->
+        <img class="bg" src="images/shops.jpg" alt="南宋小吃摊">
+
+        <!-- 右上角信息栏 -->
+        <div class="info-group">
+            <div class="info-item">积分 0</div>
+            <div class="info-item">摊位 1</div>
+            <div class="info-tip">上菜正确则加20</div>
+        </div>
+
+        <!-- 左侧点菜区 -->
+        <div class="order-area">
+            <div class="order-title">顾客点菜</div>
+            <div class="order-card-box">
+                馄饨
+				定胜糕
+            </div>
+        </div>
+
+        <!-- 右侧菜品列表 -->
+        <div class="food-card">
+            <div class="food-grid">
+                <div class="food-item">
+                    <div class="food-circle food-yuanzi"></div>
+                    <span class="food-name">乳糯圆子</span>
+                </div>
+                <div class="food-item">
+                    <div class="food-circle food-dingsheng"></div>
+                    <span class="food-name">定胜糕</span>
+                </div>
+                <div class="food-item">
+                    <div class="food-circle food-suyou"></div>
+                    <span class="food-name">吴山酥油饼</span>
+                </div>
+                <div class="food-item">
+                    <div class="food-circle food-congbao"></div>
+                    <span class="food-name">葱包烩</span>
+                </div>
+                <div class="food-item">
+                    <div class="food-circle food-huntun"></div>
+                    <span class="food-name">馄饨</span>
+                </div>
+                <div class="food-item">
+                    <div class="food-circle food-shuijing"></div>
+                    <span class="food-name">水晶脍</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部进度条 -->
+        <div class="progress-wrap">
+            <div class="progress-text">解锁新摊位</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+        </div>
+
+        <!-- 右下角按钮 -->
+        <a href="game.html" class="link-btn">前往夜市寻物→</a>
+
+    </div>
+</div>
+
+</body>
+</html>
